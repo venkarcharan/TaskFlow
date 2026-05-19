@@ -1,0 +1,14 @@
+1. Clone the Repository
+git clone https://github.com/venkarcharan/TaskFlow.git
+
+2. Open the Project Folder
+cd TaskFlow
+
+3. Install Dependencies
+npm install
+
+4. Run the Application
+npm run dev
+
+5. Open in Browser
+http://localhost:5173
