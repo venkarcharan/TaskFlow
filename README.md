@@ -1,16 +1,8 @@
-# React + Vite
+TaskFlow
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+TaskFlow is a simple and responsive task management web application developed using React.js and Vite. The application allows users to manage their daily tasks efficiently through a clean and modern dashboard interface.
 
-Currently, two official plugins are available:
+Users can log in to the application, view tasks, add new tasks, edit task details, delete tasks, assign tasks to users, and update task statuses. The project also includes task filtering functionality based on status such as In Progress, Completed, and Hold.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application uses Context API for managing logged-in user details globally and React Router DOM for smooth page navigation without reloading the application.
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
