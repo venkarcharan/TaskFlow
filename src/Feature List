@@ -1,0 +1,17 @@
+Feature List
+
+>Simple user login page
+>Dashboard to manage daily tasks
+>Add new tasks easily
+>Edit task details and status
+>Delete tasks when completed
+>Assign tasks to users
+>Filter tasks based on status
+  All
+  In Progress
+  Completed
+  Hold
+>Task statistics cards on dashboard
+>Responsive dark-themed UI
+>Navigation bar with routing
+>Logout functionality
