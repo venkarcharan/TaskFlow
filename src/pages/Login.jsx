@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom";
 
 import { UserContext } from "../context/UserContext";
 
+import {
+  validateLogin,
+} from "../utils/validation";
+
 import "../styles/Login.css";
 
 function Login() {
@@ -33,15 +37,12 @@ function Login() {
 
     e.preventDefault();
 
-    if (
-      !formData.name ||
-      !formData.email ||
-      !formData.password
-    ) {
+    const error =
+      validateLogin(formData);
 
-      alert(
-        "Please fill all fields"
-      );
+    if (error) {
+
+      alert(error);
 
       return;
     }
@@ -69,7 +70,10 @@ function Login() {
           Sign in to manage your tasks
         </p>
 
-        <form onSubmit={handleSubmit}>
+        <form
+          onSubmit={handleSubmit}
+          autoComplete="off"
+        >
 
           <label>
             FULL NAME
@@ -79,7 +83,9 @@ function Login() {
             type="text"
             name="name"
             placeholder="e.g. Name"
+            value={formData.name}
             onChange={handleChange}
+            autoComplete="off"
           />
 
           <label>
@@ -90,7 +96,9 @@ function Login() {
             type="email"
             name="email"
             placeholder="you@example.com"
+            value={formData.email}
             onChange={handleChange}
+            autoComplete="off"
           />
 
           <label>
@@ -101,14 +109,22 @@ function Login() {
             type="password"
             name="password"
             placeholder="Min 6 chars"
+            value={formData.password}
             onChange={handleChange}
+            autoComplete="new-password"
           />
 
           <button type="submit">
-            Sign In
+            Sign In →
           </button>
 
         </form>
+
+        <p className="footer-text">
+          Password must be 6+ characters
+          with an uppercase letter and
+          a number.
+        </p>
 
       </div>
 

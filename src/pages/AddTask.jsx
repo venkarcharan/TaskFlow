@@ -1,22 +1,28 @@
 import { useState } from "react";
 
+import { useNavigate } from "react-router-dom";
+
 import Navbar from "../components/Navbar";
 
 import "../styles/AddTask.css";
 
 function AddTask() {
 
-  const [taskData, setTaskData] = useState({
-    task: "",
-    status: "In Progress",
-    assignedTo: "",
-  });
+  const navigate = useNavigate();
+
+  const [taskData, setTaskData] =
+    useState({
+      task: "",
+      status: "In Progress",
+      assignedTo: "",
+    });
 
   const handleChange = (e) => {
 
     setTaskData({
       ...taskData,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.value,
     });
   };
 
@@ -24,7 +30,43 @@ function AddTask() {
 
     e.preventDefault();
 
-    alert("Task Added Successfully");
+    if (
+      !taskData.task ||
+      !taskData.assignedTo
+    ) {
+
+      alert(
+        "Please fill all fields"
+      );
+
+      return;
+    }
+
+    const oldTasks =
+      JSON.parse(
+        localStorage.getItem("tasks")
+      ) || [];
+
+    const newTask = {
+      id: oldTasks.length + 1,
+      ...taskData,
+    };
+
+    const updatedTasks = [
+      ...oldTasks,
+      newTask,
+    ];
+
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(updatedTasks)
+    );
+
+    alert(
+      "Task Added Successfully"
+    );
+
+    navigate("/home");
   };
 
   return (
@@ -36,7 +78,9 @@ function AddTask() {
 
         <div className="add-task-container">
 
-          <h1>Add New Task</h1>
+          <h1>
+            Add New Task
+          </h1>
 
           <p>
             Fill in the details to create a new task
@@ -88,14 +132,28 @@ function AddTask() {
               type="text"
               name="assignedTo"
               placeholder="Enter team member name"
-              value={taskData.assignedTo}
+              value={
+                taskData.assignedTo
+              }
               onChange={handleChange}
             />
 
             <div className="task-id-box">
 
               Task ID will be:
-              <span> #21</span>
+              <span>
+                {" "}
+                #
+                {
+                  (
+                    JSON.parse(
+                      localStorage.getItem(
+                        "tasks"
+                      )
+                    ) || []
+                  ).length + 1
+                }
+              </span>
 
             </div>
 
@@ -111,6 +169,9 @@ function AddTask() {
               <button
                 type="button"
                 className="cancel-btn"
+                onClick={() =>
+                  navigate("/home")
+                }
               >
                 Cancel
               </button>

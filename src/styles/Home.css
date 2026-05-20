@@ -116,8 +116,6 @@ body {
   outline: none;
 }
 
-
-
 .filter-buttons {
   display: flex;
 
@@ -136,11 +134,19 @@ body {
   color: white;
 
   cursor: pointer;
+
+  transition: 0.3s;
+}
+
+.filter-buttons button:hover {
+  background: #2b3148;
 }
 
 .active-filter {
   background: #6c63ff !important;
 }
+
+/* Task Grid */
 
 .task-grid {
   display: grid;
@@ -151,6 +157,8 @@ body {
 
   margin: 20px;
 }
+
+/* Task Card */
 
 .task-card {
   background: #161c2d;
@@ -170,6 +178,8 @@ body {
   margin: 20px 0;
 
   min-height: 50px;
+
+  line-height: 1.5;
 }
 
 .task-info {
@@ -177,7 +187,11 @@ body {
 
   gap: 15px;
 
+  align-items: center;
+
   margin-bottom: 20px;
+
+  flex-wrap: wrap;
 }
 
 .status {
@@ -198,10 +212,14 @@ body {
   font-size: 14px;
 }
 
+/* Buttons */
+
 .task-buttons {
   display: flex;
 
   gap: 12px;
+
+  margin-top: 18px;
 }
 
 .edit-btn {
@@ -232,22 +250,49 @@ body {
   cursor: pointer;
 }
 
-@media screen and (max-width: 900px) {
+.save-btn {
+  background: #6c63ff;
 
-  .stats-container {
-    grid-template-columns: 1fr 1fr;
-  }
+  color: white;
 
-  .task-grid {
-    grid-template-columns: 1fr;
-  }
+  border: none;
 
-  .controls {
-    flex-direction: column;
-  }
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: bold;
 }
-.edit-input {
 
+.cancel-btn {
+  background: #2b3148;
+
+  color: white;
+
+  border: none;
+
+  padding: 10px 18px;
+
+  border-radius: 10px;
+
+  cursor: pointer;
+
+  font-weight: bold;
+}
+
+.save-btn:hover {
+  opacity: 0.9;
+}
+
+.cancel-btn:hover {
+  background: #3a435f;
+}
+
+/* Edit Inputs */
+
+.edit-input {
   width: 100%;
 
   padding: 14px;
@@ -265,21 +310,25 @@ body {
   outline: none;
 
   font-size: 16px;
+
+  box-sizing: border-box;
 }
 
 .edit-row {
-
   display: flex;
 
-  gap: 10px;
+  gap: 15px;
 
   margin-top: 15px;
+
+  width: 100%;
 }
 
 .edit-row input,
 .edit-row select {
-
   flex: 1;
+
+  width: 100%;
 
   padding: 14px;
 
@@ -294,8 +343,26 @@ body {
   outline: none;
 
   font-size: 15px;
+
+  box-sizing: border-box;
 }
 
+/* Responsive */
+
+@media screen and (max-width: 900px) {
+
+  .stats-container {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .task-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+}
 .save-btn {
 
   background: #6c63ff;
@@ -310,12 +377,21 @@ body {
 
   cursor: pointer;
 
-  font-weight: bold;
+  font-weight: 600;
+
+  font-size: 15px;
+
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+
+  background: #7a73ff;
 }
 
 .cancel-btn {
 
-  background: #2b3148;
+  background: #2f3650;
 
   color: white;
 
@@ -327,15 +403,40 @@ body {
 
   cursor: pointer;
 
-  font-weight: bold;
-}
+  font-weight: 600;
 
-.save-btn:hover {
+  font-size: 15px;
 
-  opacity: 0.9;
+  transition: 0.3s;
 }
 
 .cancel-btn:hover {
 
-  background: #3a435f;
+  background: #3c4463;
+}
+
+@media screen and (max-width: 768px) {
+
+  .edit-row {
+    flex-direction: column;
+  }
+}
+
+@media screen and (max-width: 500px) {
+
+  .stats-container {
+    grid-template-columns: 1fr;
+  }
+
+  .welcome-banner h1 {
+    font-size: 34px;
+  }
+
+  .controls {
+    margin: 10px;
+  }
+
+  .task-grid {
+    margin: 10px;
+  }
 }

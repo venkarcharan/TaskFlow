@@ -1,4 +1,8 @@
-import { Link, useNavigate } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
+
+import { useContext } from "react";
+
+import { UserContext } from "../context/UserContext";
 
 import "../styles/Navbar.css";
 
@@ -6,7 +10,12 @@ function Navbar() {
 
   const navigate = useNavigate();
 
+  const { user, setUser } =
+    useContext(UserContext);
+
   const handleLogout = () => {
+
+    setUser(null);
 
     navigate("/");
   };
@@ -15,30 +24,53 @@ function Navbar() {
 
     <nav className="navbar">
 
-      <h1>
-        TaskFlow
+      <h1 className="logo">
+        <span className="logo-icon">⬡</span> TaskFlow
       </h1>
 
       <div className="nav-links">
 
-        <Link to="/home">
-          Home
-        </Link>
+        <NavLink
+          to="/home"
+          className={({ isActive }) =>
+            isActive
+              ? "nav-link active"
+              : "nav-link"
+          }
+        >
+          🏠 Home
+        </NavLink>
 
-        <Link to="/add-task">
-          Add Task
-        </Link>
+        <NavLink
+          to="/add-task"
+          className={({ isActive }) =>
+            isActive
+              ? "nav-link active"
+              : "nav-link"
+          }
+        >
+          ✚ Add Task
+        </NavLink>
 
       </div>
 
-      <button
-        className="logout-btn"
-        onClick={handleLogout}
-      >
-        Logout
-      </button>
+      <div className="right-section">
+
+        <span className="user-name">
+          👤 {user?.name}
+        </span>
+
+        <button
+          className="logout-btn"
+          onClick={handleLogout}
+        >
+          Logout
+        </button>
+
+      </div>
 
     </nav>
+
   );
 }
 

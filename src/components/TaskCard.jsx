@@ -20,7 +20,8 @@ function TaskCard({
 
     setEditedTask({
       ...editedTask,
-      [e.target.name]: e.target.value,
+      [e.target.name]:
+        e.target.value,
     });
   };
 
@@ -44,6 +45,11 @@ function TaskCard({
 
     setFilteredTasks(updatedTasks);
 
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(updatedTasks)
+    );
+
     setIsEditing(false);
   };
 
@@ -54,6 +60,7 @@ function TaskCard({
       {isEditing ? (
 
         <>
+
           <small>
             #{task.id}
           </small>
@@ -106,7 +113,7 @@ function TaskCard({
               className="save-btn"
               onClick={handleSave}
             >
-              Save
+              ✔ Save
             </button>
 
             <button
@@ -115,20 +122,24 @@ function TaskCard({
                 setIsEditing(false)
               }
             >
-              Cancel
+              ✖ Cancel
             </button>
 
           </div>
+
         </>
 
       ) : (
 
         <>
+
           <small>
             #{task.id}
           </small>
 
-          <h3>{task.task}</h3>
+          <h3>
+            {task.task}
+          </h3>
 
           <div className="task-info">
 
@@ -137,7 +148,7 @@ function TaskCard({
             </span>
 
             <span className="assigned">
-              {task.assignedTo ||
+              👤 {task.assignedTo ||
                 "Unassigned"}
             </span>
 
@@ -151,7 +162,7 @@ function TaskCard({
                 setIsEditing(true)
               }
             >
-              Edit
+              ✏️ Edit
             </button>
 
             <button
@@ -160,11 +171,13 @@ function TaskCard({
                 deleteTask(task.id)
               }
             >
-              Delete
+              🗑️ Delete
             </button>
 
           </div>
+
         </>
+
       )}
 
     </div>

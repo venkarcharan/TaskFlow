@@ -17,60 +17,93 @@ function Home() {
     useState([]);
 
   const [activeFilter, setActiveFilter] =
-    useState("In Progress");
+    useState("All");
+
+  const [searchTerm, setSearchTerm] =
+    useState("");
 
   useEffect(() => {
 
-    fetch(
-      "https://jsonplaceholder.typicode.com/todos"
-    )
-      .then((res) => res.json())
-      .then((data) => {
+    const storedTasks =
+      localStorage.getItem("tasks");
 
-        const updatedTasks = data
-          .slice(0, 8)
-          .map((item) => ({
-            id: item.id,
-            task: item.title,
-            status: item.completed
-              ? "Completed"
-              : "In Progress",
-            assignedTo: "",
-          }));
+    if (storedTasks) {
 
-        setTasks(updatedTasks);
+      const parsedTasks =
+        JSON.parse(storedTasks);
 
-        const inProgressTasks =
-          updatedTasks.filter(
-            (task) =>
-              task.status ===
-              "In Progress"
-          );
+      setTasks(parsedTasks);
 
-        setFilteredTasks(
-          inProgressTasks
-        );
-      });
-
-  }, []);
-
-  const filterTasks = (status) => {
-
-    setActiveFilter(status);
-
-    if (status === "All") {
-
-      setFilteredTasks(tasks);
+      setFilteredTasks(parsedTasks);
 
     } else {
 
-      const filtered = tasks.filter(
+      fetch(
+        "https://jsonplaceholder.typicode.com/todos"
+      )
+        .then((res) => res.json())
+        .then((data) => {
+
+          const updatedTasks = data
+            .slice(0, 8)
+            .map((item) => ({
+              id: item.id,
+              task: item.title,
+              status: item.completed
+                ? "Completed"
+                : "In Progress",
+              assignedTo: "",
+            }));
+
+          setTasks(updatedTasks);
+
+          setFilteredTasks(updatedTasks);
+
+          localStorage.setItem(
+            "tasks",
+            JSON.stringify(updatedTasks)
+          );
+        });
+    }
+
+  }, []);
+
+  const filterTasks = (
+    status,
+    search = searchTerm
+  ) => {
+
+    setActiveFilter(status);
+
+    let updatedTasks = tasks;
+
+    if (status !== "All") {
+
+      updatedTasks = updatedTasks.filter(
         (task) =>
           task.status === status
       );
-
-      setFilteredTasks(filtered);
     }
+
+    if (search.trim() !== "") {
+
+      updatedTasks = updatedTasks.filter(
+        (task) =>
+          task.task
+            .toLowerCase()
+            .includes(
+              search.toLowerCase()
+            ) ||
+
+          task.assignedTo
+            .toLowerCase()
+            .includes(
+              search.toLowerCase()
+            )
+      );
+    }
+
+    setFilteredTasks(updatedTasks);
   };
 
   const deleteTask = (id) => {
@@ -81,20 +114,41 @@ function Home() {
 
     setTasks(updated);
 
-    if (activeFilter === "All") {
+    localStorage.setItem(
+      "tasks",
+      JSON.stringify(updated)
+    );
 
-      setFilteredTasks(updated);
+    let filtered = updated;
 
-    } else {
+    if (activeFilter !== "All") {
 
-      const filtered = updated.filter(
+      filtered = filtered.filter(
         (task) =>
           task.status ===
           activeFilter
       );
-
-      setFilteredTasks(filtered);
     }
+
+    if (searchTerm.trim() !== "") {
+
+      filtered = filtered.filter(
+        (task) =>
+          task.task
+            .toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            ) ||
+
+          task.assignedTo
+            .toLowerCase()
+            .includes(
+              searchTerm.toLowerCase()
+            )
+      );
+    }
+
+    setFilteredTasks(filtered);
   };
 
   const totalTasks = tasks.length;
@@ -107,7 +161,8 @@ function Home() {
 
   const completed = tasks.filter(
     (task) =>
-      task.status === "Completed"
+      task.status ===
+      "Completed"
   ).length;
 
   const hold = tasks.filter(
@@ -196,6 +251,18 @@ function Home() {
           type="text"
           placeholder="🔍 Search tasks or users..."
           className="search-bar"
+          value={searchTerm}
+          onChange={(e) => {
+
+            setSearchTerm(
+              e.target.value
+            );
+
+            filterTasks(
+              activeFilter,
+              e.target.value
+            );
+          }}
         />
 
         <div className="filter-buttons">
