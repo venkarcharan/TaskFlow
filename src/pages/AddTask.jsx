@@ -31,8 +31,8 @@ function AddTask() {
     e.preventDefault();
 
     if (
-      !taskData.task ||
-      !taskData.assignedTo
+      !taskData.task.trim() ||
+      !taskData.assignedTo.trim()
     ) {
 
       alert(
@@ -48,13 +48,24 @@ function AddTask() {
       ) || [];
 
     const newTask = {
-      id: oldTasks.length + 1,
+
+      id:
+        oldTasks.length > 0
+          ? Math.max(
+              ...oldTasks.map(
+                (task) => task.id
+              )
+            ) + 1
+          : 1,
+
       ...taskData,
     };
 
     const updatedTasks = [
-      ...oldTasks,
+
       newTask,
+
+      ...oldTasks,
     ];
 
     localStorage.setItem(
@@ -141,17 +152,29 @@ function AddTask() {
             <div className="task-id-box">
 
               Task ID will be:
+
               <span>
                 {" "}
                 #
                 {
-                  (
-                    JSON.parse(
-                      localStorage.getItem(
-                        "tasks"
-                      )
-                    ) || []
-                  ).length + 1
+                  (() => {
+
+                    const stored =
+                      JSON.parse(
+                        localStorage.getItem(
+                          "tasks"
+                        )
+                      ) || [];
+
+                    return stored.length > 0
+                      ? Math.max(
+                          ...stored.map(
+                            (task) => task.id
+                          )
+                        ) + 1
+                      : 1;
+
+                  })()
                 }
               </span>
 

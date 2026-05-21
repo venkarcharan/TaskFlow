@@ -26,10 +26,11 @@ function Login() {
 
   const handleChange = (e) => {
 
+    const { name, value } = e.target;
+
     setFormData({
       ...formData,
-      [e.target.name]:
-        e.target.value,
+      [name]: value.replace(/^\s+/, ""),
     });
   };
 
@@ -37,8 +38,14 @@ function Login() {
 
     e.preventDefault();
 
+    const trimmedData = {
+      name: formData.name.trim(),
+      email: formData.email.trim(),
+      password: formData.password.trim(),
+    };
+
     const error =
-      validateLogin(formData);
+      validateLogin(trimmedData);
 
     if (error) {
 
@@ -47,7 +54,7 @@ function Login() {
       return;
     }
 
-    setUser(formData);
+    setUser(trimmedData);
 
     navigate("/home");
   };

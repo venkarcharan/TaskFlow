@@ -9,62 +9,96 @@ import "../styles/Home.css";
 
 function Home() {
 
-  const { user } = useContext(UserContext);
+  const { user } =
+    useContext(UserContext);
 
-  const [tasks, setTasks] = useState([]);
-
-  const [filteredTasks, setFilteredTasks] =
+  const [tasks, setTasks] =
     useState([]);
 
-  const [activeFilter, setActiveFilter] =
+  const [filteredTasks,
+    setFilteredTasks] =
+    useState([]);
+
+  const [activeFilter,
+    setActiveFilter] =
     useState("All");
 
-  const [searchTerm, setSearchTerm] =
+  const [searchTerm,
+    setSearchTerm] =
     useState("");
 
   useEffect(() => {
 
-    const storedTasks =
-      localStorage.getItem("tasks");
+    const loadTasks = async () => {
 
-    if (storedTasks) {
+      const storedTasks =
+        JSON.parse(
+          localStorage.getItem("tasks")
+        );
 
-      const parsedTasks =
-        JSON.parse(storedTasks);
+      if (
+        storedTasks &&
+        storedTasks.length > 0
+      ) {
 
-      setTasks(parsedTasks);
+        setTasks(storedTasks);
 
-      setFilteredTasks(parsedTasks);
+        setFilteredTasks(
+          storedTasks
+        );
 
-    } else {
+      } else {
 
-      fetch(
-        "https://jsonplaceholder.typicode.com/todos"
-      )
-        .then((res) => res.json())
-        .then((data) => {
+        try {
 
-          const updatedTasks = data
-            .slice(0, 8)
-            .map((item) => ({
+          const res =
+            await fetch(
+              "https://jsonplaceholder.typicode.com/todos"
+            );
+
+          const data =
+            await res.json();
+
+          const formattedTasks =
+            data.map((item) => ({
               id: item.id,
-              task: item.title,
-              status: item.completed
-                ? "Completed"
-                : "In Progress",
-              assignedTo: "",
+
+              task:
+                item.title,
+
+              status:
+                item.completed
+                  ? "Completed"
+                  : "In Progress",
+
+              assignedTo:
+                "User " +
+                item.userId,
             }));
 
-          setTasks(updatedTasks);
+          setTasks(
+            formattedTasks
+          );
 
-          setFilteredTasks(updatedTasks);
+          setFilteredTasks(
+            formattedTasks
+          );
 
           localStorage.setItem(
             "tasks",
-            JSON.stringify(updatedTasks)
+            JSON.stringify(
+              formattedTasks
+            )
           );
-        });
-    }
+
+        } catch (err) {
+
+          console.log(err);
+        }
+      }
+    };
+
+    loadTasks();
 
   }, []);
 
@@ -75,42 +109,52 @@ function Home() {
 
     setActiveFilter(status);
 
-    let updatedTasks = tasks;
+    let updatedTasks =
+      [...tasks];
 
     if (status !== "All") {
 
-      updatedTasks = updatedTasks.filter(
-        (task) =>
-          task.status === status
-      );
+      updatedTasks =
+        updatedTasks.filter(
+          (task) =>
+            task.status ===
+            status
+        );
     }
 
-    if (search.trim() !== "") {
+    if (
+      search.trim() !== ""
+    ) {
 
-      updatedTasks = updatedTasks.filter(
-        (task) =>
-          task.task
-            .toLowerCase()
-            .includes(
-              search.toLowerCase()
-            ) ||
+      updatedTasks =
+        updatedTasks.filter(
+          (task) =>
+            task.task
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              ) ||
 
-          task.assignedTo
-            .toLowerCase()
-            .includes(
-              search.toLowerCase()
-            )
-      );
+            task.assignedTo
+              .toLowerCase()
+              .includes(
+                search.toLowerCase()
+              )
+        );
     }
 
-    setFilteredTasks(updatedTasks);
+    setFilteredTasks(
+      updatedTasks
+    );
   };
 
   const deleteTask = (id) => {
 
-    const updated = tasks.filter(
-      (task) => task.id !== id
-    );
+    const updated =
+      tasks.filter(
+        (task) =>
+          task.id !== id
+      );
 
     setTasks(updated);
 
@@ -121,54 +165,69 @@ function Home() {
 
     let filtered = updated;
 
-    if (activeFilter !== "All") {
+    if (
+      activeFilter !==
+      "All"
+    ) {
 
-      filtered = filtered.filter(
-        (task) =>
-          task.status ===
-          activeFilter
-      );
+      filtered =
+        filtered.filter(
+          (task) =>
+            task.status ===
+            activeFilter
+        );
     }
 
-    if (searchTerm.trim() !== "") {
+    if (
+      searchTerm.trim() !==
+      ""
+    ) {
 
-      filtered = filtered.filter(
-        (task) =>
-          task.task
-            .toLowerCase()
-            .includes(
-              searchTerm.toLowerCase()
-            ) ||
+      filtered =
+        filtered.filter(
+          (task) =>
+            task.task
+              .toLowerCase()
+              .includes(
+                searchTerm.toLowerCase()
+              ) ||
 
-          task.assignedTo
-            .toLowerCase()
-            .includes(
-              searchTerm.toLowerCase()
-            )
-      );
+            task.assignedTo
+              .toLowerCase()
+              .includes(
+                searchTerm.toLowerCase()
+              )
+        );
     }
 
-    setFilteredTasks(filtered);
+    setFilteredTasks(
+      filtered
+    );
   };
 
-  const totalTasks = tasks.length;
+  const totalTasks =
+    tasks.length;
 
-  const inProgress = tasks.filter(
-    (task) =>
-      task.status ===
-      "In Progress"
-  ).length;
+  const inProgress =
+    tasks.filter(
+      (task) =>
+        task.status ===
+        "In Progress"
+    ).length;
 
-  const completed = tasks.filter(
-    (task) =>
-      task.status ===
-      "Completed"
-  ).length;
+  const completed =
+    tasks.filter(
+      (task) =>
+        task.status ===
+        "Completed"
+    ).length;
 
-  const hold = tasks.filter(
-    (task) =>
-      task.status === "Hold"
-  ).length;
+  const hold =
+    tasks.filter(
+      (task) =>
+        task.status ===
+        "Hold"
+    ).length;
 
   return (
 
@@ -269,12 +328,16 @@ function Home() {
 
           <button
             className={
-              activeFilter === "All"
+              activeFilter ===
+              "All"
                 ? "active-filter"
                 : ""
             }
+
             onClick={() =>
-              filterTasks("All")
+              filterTasks(
+                "All"
+              )
             }
           >
             All
@@ -287,6 +350,7 @@ function Home() {
                 ? "active-filter"
                 : ""
             }
+
             onClick={() =>
               filterTasks(
                 "In Progress"
@@ -303,6 +367,7 @@ function Home() {
                 ? "active-filter"
                 : ""
             }
+
             onClick={() =>
               filterTasks(
                 "Completed"
@@ -314,12 +379,16 @@ function Home() {
 
           <button
             className={
-              activeFilter === "Hold"
+              activeFilter ===
+              "Hold"
                 ? "active-filter"
                 : ""
             }
+
             onClick={() =>
-              filterTasks("Hold")
+              filterTasks(
+                "Hold"
+              )
             }
           >
             Hold
@@ -331,23 +400,31 @@ function Home() {
 
       <div className="task-grid">
 
-        {filteredTasks.map((task) => (
+        {filteredTasks.map(
+          (task) => (
 
-          <TaskCard
-            key={task.id}
-            task={task}
-            tasks={tasks}
-            setTasks={setTasks}
-            filteredTasks={
-              filteredTasks
-            }
-            setFilteredTasks={
-              setFilteredTasks
-            }
-            deleteTask={deleteTask}
-          />
+            <TaskCard
+              key={task.id}
 
-        ))}
+              task={task}
+
+              tasks={tasks}
+
+              setTasks={
+                setTasks
+              }
+
+              setFilteredTasks={
+                setFilteredTasks
+              }
+
+              deleteTask={
+                deleteTask
+              }
+            />
+
+          )
+        )}
 
       </div>
 
